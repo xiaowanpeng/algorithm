@@ -1,0 +1,40 @@
+(in-package algorithm)
+
+(defmacro define-pos-cal (func-name cal-exp)
+  `(defun ,func-name (hp i)
+     (if (< 0 ,cal-exp (length hp)) ,cal-exp nil)))
+
+(define-pos-cal left-pos (* 2 i))
+(define-pos-cal right-pos (+ 1 (* 2 i)))
+(define-pos-cal parent-pos (multiple-value-bind (a b) (floor (/ i 2)) (* 0 b) a))
+
+(defun max-pos (hp &rest pos-lst)
+  (reduce (lambda (pos1 pos2)
+            (cond ((not (and pos1 pos2)) (or pos1 pos2))
+                  ((>= (aref hp pos1) (aref hp pos2)) pos1)
+                  (t pos2)))
+          pos-lst))
+
+(defun max-heapify (hp i)
+  (let ((max-pos (max-pos hp i (left-pos hp i) (right-pos hp i))))
+    (unless (= max-pos i)
+      (rotatef (aref hp i) (aref hp max-pos))
+      (max-heapify hp max-pos))
+    hp))
+
+(defun build-max-heap (hp)
+  (let ((len (- (length hp) 1)))
+    (do ((i (floor (/ len 2)) (1- i)))
+        ((= i 0) hp)
+      (setf hp (max-heapify hp i)))))
+
+(defun do-heap-sort (hp result)
+  (let* ((len (length hp)))
+    (vector-push-extend (aref hp 1) result)
+    (rotatef (aref hp 1) (aref hp (- len 1)))
+    (if (= 2 len)
+        (reverse result)
+        (do-heap-sort (max-heapify (subseq hp 0 (- len 1)) 1) result))))
+    
+(defun heap-sort (hp)
+  (do-heap-sort (build-max-heap hp) (make-array 0 :fill-pointer 0 :adjustable t)))
