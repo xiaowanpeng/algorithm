@@ -8,5 +8,7 @@
     :components ((:file "package")
                  (:module "sort"
                   :depends-on ("package")
-		  :components ((:file "heap")))))
+		  :components ((:file "heap")
+                               (:file "quick")
+                               (:file "linear")))))
 
