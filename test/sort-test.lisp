@@ -2,7 +2,6 @@
 
 (rem-all-tests)
 
-#|
 (deftest left-pos-t (algorithm::left-pos #(0 1 2 3 4) 2) 4)
 (deftest left-pos-nil (algorithm::left-pos #(0 1 2 3 4) 3) nil)
 (deftest right-pos-t (algorithm::right-pos #(0 1 2 3 4) 1) 3)
@@ -22,21 +21,46 @@
 (deftest heap-sort-t
     (algorithm::heap-sort (vector 0 1 2 3 4 5))
   #(1 2 3 4 5))
-(deftest quick-partition-t
-    (let* ((lst (list 5 2 4 1 3))
-           (i (algorithm::quick-partition lst 0 4)))
-      (and (equal lst '(2 1 3 5 4)) (equal i 2))) t)
 (deftest quick-sort-t
     (let ((result (list 5 2 4 1 3)))
       (algorithm::quick-sort result 0 4)
       result) (1 2 3 4 5))
-|#
-(deftest counting-sort-t1
-    (algorithm::counting-sort (vector 5 4 1 3 2) 5)
-  #(1 2 3 4 5))
+(deftest quick-partition-t
+    (let* ((lst (list 5 2 4 1 3))
+           (i (algorithm::quick-partition lst 0 4)))
+      (and (equal lst '(2 1 3 5 4)) (equal i 2))) t)
 (deftest counting-sort-t2
     (algorithm::counting-sort (vector 5 3 4 1 3 4 2) 5)
   #(1 2 3 3 4 4 5))
+(deftest counting-sort-t1
+    (algorithm::counting-sort (vector 5 4 1 3 2) 5)
+  #(1 2 3 4 5))
+
+(defmacro bind-nodes (num &body body)
+  (let ((result '()))
+    (dotimes (i num)
+      (setf result 
+            (cons `(,(intern (format nil "NODE~a" i)) 
+                     (make-instance 'algorithm::Tree-Node :val ,i))
+                  result)))
+    `(let ,(reverse result) ,@body)))
+
+(deftest search-tree-insert-t
+    (bind-nodes 5
+      (progn
+        (algorithm::tree-insert node3 node1)
+        (algorithm::tree-insert node3 node2)
+        (algorithm::tree-insert node3 node4)
+        (algorithm::tree-insert node3 node0)
+        (let ((act-val
+               (list (algorithm::left-node node1)
+                     (algorithm::right-node node1)
+                     (algorithm::left-node node3)
+                     (algorithm::right-node node3)))
+              (exp-val (list node0 node2 node1 node4)))
+          (equal act-val exp-val))))
+  t)
+
 (defun test ()
   (do-tests))
 

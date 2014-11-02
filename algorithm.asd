@@ -10,5 +10,8 @@
                   :depends-on ("package")
 		  :components ((:file "heap")
                                (:file "quick")
-                               (:file "linear")))))
+                               (:file "linear")))
+                 (:module "structure"
+                  :depends-on ("package")
+                  :components ((:file "search-tree")))))
 

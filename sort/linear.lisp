@@ -10,3 +10,4 @@
       (setf (aref result (1- (aref tmp (aref seq i)))) (aref seq i))
       (decf (aref tmp (aref seq i))))
     result))
+
