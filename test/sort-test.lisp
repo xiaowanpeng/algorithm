@@ -61,6 +61,64 @@
           (equal act-val exp-val))))
   t)
 
+(deftest search-tree-next-t
+    (bind-nodes 5
+      (progn
+        (algorithm::tree-insert node3 node1)
+        (algorithm::tree-insert node3 node2)
+        (algorithm::tree-insert node3 node4)
+        (algorithm::tree-insert node3 node0)
+        (and
+         (equal node4 (algorithm::tree-next node3))
+         (equal node3 (algorithm::tree-next node2))
+         (equal node2 (algorithm::tree-next node1))
+         (equal node1 (algorithm::tree-next node0)))))
+  t)
+
+(deftest search-tree-pre-t
+    (bind-nodes 5
+      (progn
+        (algorithm::tree-insert node3 node1)
+        (algorithm::tree-insert node3 node2)
+        (algorithm::tree-insert node3 node4)
+        (algorithm::tree-insert node3 node0)
+        (and
+         (equal node3 (algorithm::tree-pre node4))
+         (equal node2 (algorithm::tree-pre node3))
+         (equal node1 (algorithm::tree-pre node2))
+         (equal node0 (algorithm::tree-pre node1)))))
+  t)
+
+(deftest search-tree-del-t1
+    (bind-nodes 5
+      (progn
+        (algorithm::tree-insert node3 node1)
+        (algorithm::tree-insert node3 node2)
+        (algorithm::tree-insert node3 node4)
+        (algorithm::tree-insert node3 node0)
+        (algorithm::tree-del node1)
+        (and
+         (equal node3 (algorithm::tree-pre node4))
+         (equal node2 (algorithm::tree-pre node3))
+         (equal node0 (algorithm::tree-pre node2)))))
+
+  t)
+
+(deftest search-tree-del-t2
+    (bind-nodes 5
+      (progn
+        (algorithm::tree-insert node3 node1)
+        (algorithm::tree-insert node3 node2)
+        (algorithm::tree-insert node3 node4)
+        (algorithm::tree-insert node3 node0)
+        (algorithm::tree-del node1)
+        (and
+         (equal node4 (algorithm::tree-next node3))
+         (equal node3 (algorithm::tree-next node2))
+         (equal node2 (algorithm::tree-next node0)))))
+
+  t)
+
 (defun test ()
   (do-tests))
 
